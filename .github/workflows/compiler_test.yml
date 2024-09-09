@@ -34,7 +34,19 @@ jobs:
             export PRESET=clang
             export COMPILER=$(echo ${{ matrix.compiler }} | sed "s/clang/clang++/")
           fi
-          cmake --preset $PRESET -DCPP_UTIL_ENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=$COMPILER .
+          cmake --preset $PRESET -DCPP_UTIL_ENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=$COMPILER -DCPP_UTIL_ARITHMETIC_TYPE_TO_NAME_USE_CONST_CHAR_PTR=OFF .
+          cmake --build --preset $PRESET
+          ctest --preset $PRESET
+      - name: "Build project and run tests with CPP_UTIL_ARITHMETIC_TYPE_TO_NAME_USE_CONST_CHAR_PTR"
+        run: |
+          if [[ ${{ matrix.compiler }} == g++* ]]; then
+            export PRESET=gcc
+            export COMPILER=${{ matrix.compiler }}
+          else
+            export PRESET=clang
+            export COMPILER=$(echo ${{ matrix.compiler }} | sed "s/clang/clang++/")
+          fi
+          cmake --preset $PRESET -DCPP_UTIL_ENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=$COMPILER -DCPP_UTIL_ARITHMETIC_TYPE_TO_NAME_USE_CONST_CHAR_PTR=ON .
           cmake --build --preset $PRESET
           ctest --preset $PRESET
 
@@ -55,6 +67,11 @@ jobs:
         uses: actions/checkout@v2
       - name: "Build project and run tests"
         run: |
-          cmake --preset msvc -G "NMake Makefiles" -DCPP_UTIL_ENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=CL -DCMAKE_CXX_COMPILER_FORCED=ON .
+          cmake --preset msvc -G "NMake Makefiles" -DCPP_UTIL_ENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=CL -DCMAKE_CXX_COMPILER_FORCED=ON -DCPP_UTIL_ARITHMETIC_TYPE_TO_NAME_USE_CONST_CHAR_PTR=OFF .
+          cmake --build --preset msvc
+          ctest --preset msvc
+      - name: "Build project and run tests with CPP_UTIL_ARITHMETIC_TYPE_TO_NAME_USE_CONST_CHAR_PTR"
+        run: |
+          cmake --preset msvc -G "NMake Makefiles" -DCPP_UTIL_ENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=CL -DCMAKE_CXX_COMPILER_FORCED=ON -DCPP_UTIL_ARITHMETIC_TYPE_TO_NAME_USE_CONST_CHAR_PTR=ON .
           cmake --build --preset msvc
           ctest --preset msvc
