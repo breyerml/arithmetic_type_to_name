@@ -12,7 +12,7 @@
 #include <stdfloat>  // std::float16_t, std::float32_t, std::float64_t, std::float128_t, std::bfloat16_t
 #endif
 
-#if defined(__has_cpp_attribute) && __has_cpp_attribute(nodiscard)
+#if defined(__has_cpp_attribute) && __has_cpp_attribute(nodiscard) && __cplusplus > 201700
 #define ARITHMETIC_TYPE_TO_NAME_NODISCARD [[nodiscard]]
 #else
 #define ARITHMETIC_TYPE_TO_NAME_NODISCARD
