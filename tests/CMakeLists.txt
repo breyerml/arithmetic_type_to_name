@@ -20,6 +20,10 @@ function(register_test cxx_standard)
     target_link_libraries(${CPP_UTIL_TEST_CASE_NAME} Catch)
     # set requested C++ standard
     set_property(TARGET ${CPP_UTIL_TEST_CASE_NAME} PROPERTY CXX_STANDARD ${cxx_standard})
+    if (CPP_UTIL_ARITHMETIC_TYPE_TO_NAME_USE_CONST_CHAR_PTR)
+        # use const char * -> also support C++11 and C++14
+        target_compile_definitions(${CPP_UTIL_TEST_CASE_NAME} PRIVATE CPP_UTIL_ARITHMETIC_TYPE_TO_NAME_USE_CONST_CHAR_PTR)
+    endif ()
 
     # add test for CTest
     set(CPP_UTIL_TEST_NAME "test_cxx${cxx_standard}")
@@ -27,9 +31,14 @@ function(register_test cxx_standard)
 endfunction ()
 
 # generate list of all supported C++ standards
+if (CPP_UTIL_ARITHMETIC_TYPE_TO_NAME_USE_CONST_CHAR_PTR)
+    set(CPP_UTIL_MINIMUM_CXX_STANDARD 11)
+else ()
+    set(CPP_UTIL_MINIMUM_CXX_STANDARD 17)
+endif ()
 set(CPP_UTIL_CURRENT_CXX_STANDARD ${CMAKE_CXX_STANDARD_LATEST})
 set(CPP_UTIL_SUPPORTED_CXX_STANDARDS)
-while (NOT ${CPP_UTIL_CURRENT_CXX_STANDARD} EQUAL 17)  # C++17 ist the oldest supported C++ standard for cpp_util::arithmetic_type_to_name
+while (NOT ${CPP_UTIL_CURRENT_CXX_STANDARD} EQUAL ${CPP_UTIL_MINIMUM_CXX_STANDARD})
     list(APPEND CPP_UTIL_SUPPORTED_CXX_STANDARDS ${CPP_UTIL_CURRENT_CXX_STANDARD})
     math(EXPR CPP_UTIL_CURRENT_CXX_STANDARD "${CPP_UTIL_CURRENT_CXX_STANDARD} - 3")
 endwhile ()

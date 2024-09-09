@@ -3,9 +3,7 @@
 #include <iostream>  // std::cout
 
 #if __has_include(<stdfloat>)
-
 #include <stdfloat>  // std::float16_t, std::float32_t, std::float64_t, std::float128_t, std::bfloat16_t
-
 #endif
 
 int main() {

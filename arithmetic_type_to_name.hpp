@@ -8,30 +8,48 @@
 #ifndef CPP_UTIL_ARITHMETIC_TYPE_TO_NAME_HPP
 #define CPP_UTIL_ARITHMETIC_TYPE_TO_NAME_HPP
 
-#include <string_view>  // std::string_view
-
 #if __has_include(<stdfloat>)
 #include <stdfloat>  // std::float16_t, std::float32_t, std::float64_t, std::float128_t, std::bfloat16_t
 #endif
 
+#if defined(__has_cpp_attribute) && __has_cpp_attribute(nodiscard)
+#define ARITHMETIC_TYPE_TO_NAME_NODISCARD [[nodiscard]]
+#else
+#define ARITHMETIC_TYPE_TO_NAME_NODISCARD
+#endif
+
+#if defined(__cpp_constexpr)
+#define ARITHMETIC_TYPE_TO_NAME_CONSTEXPR constexpr
+#else
+#define ARITHMETIC_TYPE_TO_NAME_CONSTEXPR
+#endif
+
+#if defined(CPP_UTIL_ARITHMETIC_TYPE_TO_NAME_USE_CONST_CHAR_PTR)
+#define ARITHMETIC_TYPE_TO_NAME_RETURN_TYPE const char *
+#else
+#include <string_view>  // std::string_view
+
+#define ARITHMETIC_TYPE_TO_NAME_RETURN_TYPE std::string_view
+#endif
+
 namespace cpp_util {
 
-#define CPP_UTIL_CREATE_ARITHMETIC_TYPE_NAME(type)                                                                       \
-  template <>                                                                                                            \
-  [[nodiscard]] constexpr inline std::string_view arithmetic_type_to_name<type>() { return #type; }                      \
-  template <>                                                                                                            \
-  [[nodiscard]] constexpr inline std::string_view arithmetic_type_to_name<const type>() { return "const " #type; }       \
-  template <>                                                                                                            \
-  [[nodiscard]] constexpr inline std::string_view arithmetic_type_to_name<volatile type>() { return "volatile " #type; } \
-  template <>                                                                                                            \
-  [[nodiscard]] constexpr inline std::string_view arithmetic_type_to_name<const volatile type>() { return "const volatile " #type; }
+#define CPP_UTIL_CREATE_ARITHMETIC_TYPE_NAME(type)                                                                                                                                      \
+  template <>                                                                                                                                                                           \
+  ARITHMETIC_TYPE_TO_NAME_NODISCARD ARITHMETIC_TYPE_TO_NAME_CONSTEXPR inline ARITHMETIC_TYPE_TO_NAME_RETURN_TYPE arithmetic_type_to_name<type>() { return #type; }                      \
+  template <>                                                                                                                                                                           \
+  ARITHMETIC_TYPE_TO_NAME_NODISCARD ARITHMETIC_TYPE_TO_NAME_CONSTEXPR inline ARITHMETIC_TYPE_TO_NAME_RETURN_TYPE arithmetic_type_to_name<const type>() { return "const " #type; }       \
+  template <>                                                                                                                                                                           \
+  ARITHMETIC_TYPE_TO_NAME_NODISCARD ARITHMETIC_TYPE_TO_NAME_CONSTEXPR inline ARITHMETIC_TYPE_TO_NAME_RETURN_TYPE arithmetic_type_to_name<volatile type>() { return "volatile " #type; } \
+  template <>                                                                                                                                                                           \
+  ARITHMETIC_TYPE_TO_NAME_NODISCARD ARITHMETIC_TYPE_TO_NAME_CONSTEXPR inline ARITHMETIC_TYPE_TO_NAME_RETURN_TYPE arithmetic_type_to_name<const volatile type>() { return "const volatile " #type; }
 
 
 /*******************************************************************************************************************/
 /**                                            base template (deleted)                                            **/
 /*******************************************************************************************************************/
-template <typename T>
-[[nodiscard]] constexpr inline std::string_view arithmetic_type_to_name() = delete;
+template<typename T>
+ARITHMETIC_TYPE_TO_NAME_NODISCARD ARITHMETIC_TYPE_TO_NAME_CONSTEXPR inline ARITHMETIC_TYPE_TO_NAME_RETURN_TYPE arithmetic_type_to_name() = delete;
 
 /*******************************************************************************************************************/
 /**                                                 boolean types                                                 **/

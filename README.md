@@ -1,7 +1,6 @@
 # cpp_util::arithmetic_type_to_name
 
 [![Test with GCC, Clang and MSVC](https://github.com/breyerml/arithmetic_type_to_name/actions/workflows/compiler_test.yml/badge.svg)](https://github.com/breyerml/arithmetic_type_to_name/actions/workflows/compiler_test.yml)
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Implementation of a function to convert any cv-qualified arithmetic type to its name. 
@@ -9,7 +8,8 @@ The arithmetic type names are defined by [`std::is_arithmetic`](https://en.cppre
 
 ## Prerequisites
 
-Any compiler supporting `C++17` should be sufficient (for more information see [Compiler Support](#compiler-support)).
+Any compiler supporting `C++17` should be sufficient (for more information see [Compiler Support](#compiler-support)). 
+If `CPP_UTIL_ARITHMETIC_TYPE_TO_NAME_USE_CONST_CHAR_PTR` is set to `ON`, a `C++11` compiler is enough by using `const char *` instead of `std::string_view`.
 Additionally, at least [CMake](https://cmake.org/) `3.30` is required.
 
 The tests are implemented using [Catch2](https://github.com/catchorg/Catch2/tree/v2.x), which gets shipped as single header file with this repository.
@@ -38,7 +38,7 @@ cmake --build --preset [preset]
 ctest --preset [preset]
 ```
 
-Tests for all supported `C++` standards starting with `C++17` for the currently used compiler are generated.
+Tests for all supported `C++` standards starting with `C++11` for the currently used compiler are generated.
 
 ## Compiler Support
 
@@ -62,8 +62,11 @@ All tests were run using the following compiler flags:
 
 ## Compiler Standard Version
 
+- `C++11`:
+  - the minimum required standard version if `CPP_UTIL_ARITHMETIC_TYPE_TO_NAME_USE_CONST_CHAR_PTR` is set to `ON`
+
 - `C++17`:
-  - the minimum required standard version
+  - the minimum required standard version if `CPP_UTIL_ARITHMETIC_TYPE_TO_NAME_USE_CONST_CHAR_PTR` is set to `OFF`
 
 - `C++20`:
   - add support for `char8_t`
